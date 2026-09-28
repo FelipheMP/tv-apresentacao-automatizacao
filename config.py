@@ -9,14 +9,26 @@ TOTAL_SLIDES = 7
 # antes da automação começar
 START_DELAY = 5
 
-# Power BI - entrada em tela cheia
-POWERBI_VIEW_MENU = (0, 0)
-POWERBI_FULLSCREEN_OPTION = (0, 0)
+# Power BI - coordenadas da interface
 
-# Power BI - troca de página no modo tela cheia
-POWERBI_PAGE_MENU = (0, 0)
-POWERBI_PAGE_PRIORIDADES = (0, 0)
-POWERBI_PAGE_A_VENCER = (0, 0)
+# Posição neutra para esconder o cursor visualmente.
+# Pode ser um canto da tela onde não atrapalhe o dashboard.
+MOUSE_PARK_POSITION = (1919, 1079)
 
-# Esperas curtas entre cliques da interface
+# Menu usado para abrir opções de exibição
+POWERBI_VIEW_MENU = (1824, 209)
+
+# Opção "Tela inteira"
+POWERBI_FULLSCREEN_OPTION = (1822, 267)
+
+# Menu inferior usado para trocar de página
+POWERBI_PAGE_MENU = (354, 1133)
+
+# Página "Prioridades"
+POWERBI_PAGE_PRIORIDADES = (301, 1021)
+
+# Página "A vencer em 3 dias"
+POWERBI_PAGE_A_VENCER = (295, 1062)
+
+# Tempo entre interações com a interface
 POWERBI_UI_DELAY = 0.8

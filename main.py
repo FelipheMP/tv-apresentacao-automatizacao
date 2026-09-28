@@ -21,6 +21,15 @@ def main() -> None:
     print("Entrando em tela cheia...")
     powerbi.enter_fullscreen()
 
+    time.sleep(3)
+
+    print("Mostrando Prioridades...")
+    powerbi.show_prioridades()
+    time.sleep(5)
+
+    print("Mostrando A vencer em 3 dias...")
+    powerbi.show_a_vencer_3_dias()
+
     time.sleep(5)
 
     print("Saindo da tela cheia...")
