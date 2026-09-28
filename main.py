@@ -1,10 +1,11 @@
 import time
 
+from config import POWERBI_PAGE_DURATION
 from powerpoint import PowerPointController
 from powerbi import PowerBIController
 from schedule import (
     is_operating_hours,
-    wait_until_operating_hours,
+    wait_until_operating_hours
 )
 
 
@@ -13,15 +14,23 @@ def run_cycle(
     powerbi: PowerBIController,
 ) -> None:
     """
-    Executa um ciclo simples da automação.
+    Executa um ciclo completo da exibição da TV.
+
+    1. Exibe todos os slides do PowerPoint.
+    2. Abre o Power BI.
+    3. Atualiza o relatório quando necessário.
+    4. Exibe Prioridades.
+    5. Exibe A vencer em 3 dias.
+    6. Retorna ao primeiro slide do PowerPoint.
     """
 
-    print("PowerPoint...")
-    powerpoint.focus()
+    print("\n--- Iniciando ciclo ---")
 
-    time.sleep(3)
+    # PowerPoint
+    powerpoint.show_all_slides()
 
-    print("Power BI...")
+    # Power BI
+    print("Abrindo Power BI...")
     powerbi.open()
 
     if powerbi.needs_refresh():
@@ -30,20 +39,25 @@ def run_cycle(
     print("Entrando em tela cheia...")
     powerbi.enter_fullscreen()
 
-    print("Mostrando Prioridades...")
+    print("Exibindo Prioridades...")
     powerbi.show_prioridades()
-    time.sleep(5)
+    time.sleep(POWERBI_PAGE_DURATION)
 
-    print("Mostrando A vencer em 3 dias...")
+    print("Exibindo A vencer em 3 dias...")
     powerbi.show_a_vencer_3_dias()
-    time.sleep(5)
+    time.sleep(POWERBI_PAGE_DURATION)
 
     print("Saindo da tela cheia...")
     powerbi.exit_fullscreen()
 
+    # Prepara o PowerPoint para o próximo ciclo antes
+    # de colocá-lo novamente na frente.
+    powerpoint.first_slide()
+
     print("Voltando ao PowerPoint...")
     powerpoint.focus()
 
+    print("--- Ciclo concluído ---")
 
 def main() -> None:
     if not wait_until_operating_hours():

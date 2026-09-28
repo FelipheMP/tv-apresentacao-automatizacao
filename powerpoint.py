@@ -4,7 +4,7 @@ import win32com.client
 import win32con
 import win32gui
 
-from config import SLIDE_DURATION
+from config import SLIDE_DURATION, SLIDES_DYNAMIC_POWERBI_PAGES
 from window_utils import force_foreground
 
 
@@ -67,6 +67,34 @@ class PowerPointController:
             )
 
         return found_windows[0]
+
+    def get_slide_count(self) -> int:
+        """
+        Retorna a quantidade total de slides da apresentação atual.
+        """
+        slideshow = self._get_slideshow()
+
+        return slideshow.Presentation.Slides.Count - SLIDES_DYNAMIC_POWERBI_PAGES # Menos os slides dos dashboards do Power BI
+
+
+    def show_all_slides(self) -> None:
+        """
+        Exibe todos os slides da apresentação, começando pelo primeiro.
+        """
+        self.focus()
+        self.first_slide()
+
+        total_slides = self.get_slide_count()
+
+        print(f"Apresentação possui {total_slides} slides.")
+
+        for slide_number in range(1, total_slides + 1):
+            print(f"Exibindo slide {slide_number}/{total_slides}")
+
+            self.wait()
+
+            if slide_number < total_slides:
+                self.next_slide()
 
     def focus(self) -> None:
         """

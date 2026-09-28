@@ -11,11 +11,13 @@ OPERATING_WEEKDAYS = {0, 1, 2, 3, 4}
 TEST_MODE = False
 
 # Tempo, em segundos, que cada slide ficará visível na TV
-SLIDE_DURATION = 10
+SLIDE_DURATION = 15
 
-# Quantidade de slides da apresentação
-# Depois podemos descobrir isso automaticamente
-TOTAL_SLIDES = 7
+# Quantidade de slides do PowerPoint que possuem dashboards do Power BI embutidas.
+SLIDES_DYNAMIC_POWERBI_PAGES = 2
+
+# Tempo de exibição de cada página do Power BI
+POWERBI_PAGE_DURATION = 45
 
 # Tempo inicial para você colocar o PowerPoint em foco
 # antes da automação começar
