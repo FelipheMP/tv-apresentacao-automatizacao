@@ -18,6 +18,16 @@ class BrowserController:
     def __init__(self, title_keyword: str = "Edge"):
         self.title_keyword = title_keyword.lower()
 
+    def is_available(self) -> bool:
+        """
+        Verifica se existe uma janela do Edge disponível.
+        """
+        try:
+            self._find_window()
+            return True
+        except RuntimeError:
+            return False
+
     def _find_window(self) -> int:
         """
         Procura uma janela visível do Microsoft Edge.

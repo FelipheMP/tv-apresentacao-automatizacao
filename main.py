@@ -16,6 +16,25 @@ from schedule import (
 
 logger = setup_logger()
 
+def check_environment(
+    powerpoint: PowerPointController,
+    powerbi: PowerBIController,
+) -> None:
+    """
+    Verifica se os componentes necessários para a automação
+    continuam disponíveis.
+    """
+
+    if not powerpoint.is_available():
+        raise RuntimeError(
+            "PowerPoint não está disponível ou "
+            "o modo apresentação foi encerrado."
+        )
+
+    if not powerbi.browser.is_available():
+        raise RuntimeError(
+            "Microsoft Edge não está disponível."
+        )
 
 def run_cycle(
     powerpoint: PowerPointController,
@@ -26,6 +45,11 @@ def run_cycle(
     """
 
     logger.info("Iniciando ciclo.")
+
+    check_environment(
+        powerpoint,
+        powerbi
+    )
 
     # PowerPoint
     logger.info("Exibindo apresentação do PowerPoint.")

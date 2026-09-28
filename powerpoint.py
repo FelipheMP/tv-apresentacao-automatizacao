@@ -19,6 +19,19 @@ class PowerPointController:
     def __init__(self, slide_duration: int = SLIDE_DURATION):
         self.slide_duration = slide_duration
 
+    def is_available(self) -> bool:
+        """
+        Verifica se o PowerPoint está aberto e se existe
+        uma apresentação em modo Slide Show.
+        """
+        try:
+            app = self._get_application()
+
+            return app.SlideShowWindows.Count > 0
+
+        except Exception:
+            return False
+
     def _get_application(self):
         try:
             return win32com.client.GetActiveObject(
