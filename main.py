@@ -10,7 +10,7 @@ from powerpoint import PowerPointController
 from powerbi import PowerBIController
 from schedule import (
     is_operating_hours,
-    wait_until_operating_hours,
+    wait_until_operating_hours
 )
 
 
@@ -124,28 +124,30 @@ def recover(
 def main() -> None:
     logger.info("Aplicação iniciada.")
 
-    if not wait_until_operating_hours():
-        logger.info(
-            "Aplicação encerrada fora do horário de funcionamento."
-        )
-        return
-
     powerpoint = PowerPointController()
     powerbi = PowerBIController()
 
     consecutive_errors = 0
 
-    logger.info("Automação da TV iniciada.")
+    while True:
+        if not is_operating_hours():
+            logger.info(
+                "Fora do horário de funcionamento. "
+                "Aguardando próximo período."
+            )
 
-    while is_operating_hours():
+            wait_until_operating_hours()
+
+            logger.info(
+                "Horário de funcionamento iniciado."
+            )
+
         try:
             run_cycle(
                 powerpoint,
                 powerbi,
             )
 
-            # Se o ciclo terminou corretamente,
-            # zeramos o contador de falhas.
             consecutive_errors = 0
 
         except KeyboardInterrupt:
@@ -183,7 +185,7 @@ def main() -> None:
 
             time.sleep(ERROR_RETRY_DELAY)
 
-    logger.info("Automação encerrada.")
+    logger.info("Aplicação encerrada.")
 
 
 if __name__ == "__main__":

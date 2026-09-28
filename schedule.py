@@ -5,20 +5,15 @@ from config import (
     START_TIME,
     END_TIME,
     OPERATING_WEEKDAYS,
-    TEST_MODE
+    TEST_MODE,
 )
 
 
-def is_weekday() -> bool:
-    """Retorna True se hoje for um dia útil configurado."""
-    return datetime.now().weekday() in OPERATING_WEEKDAYS
-
 def is_operating_hours() -> bool:
     """
-    Retorna True quando estamos em um dia útil
-    e dentro do horário de funcionamento.
+    Retorna True quando a automação pode executar ciclos.
 
-    Em TEST_MODE, ignora essas restrições.
+    Em TEST_MODE, ignora horário e dia da semana.
     """
     if TEST_MODE:
         return True
@@ -30,29 +25,18 @@ def is_operating_hours() -> bool:
         and START_TIME <= now.time() < END_TIME
     )
 
-def wait_until_operating_hours() -> bool:
-    """
-    Aguarda até o início do horário operacional.
 
-    Em TEST_MODE, libera imediatamente.
+def wait_until_operating_hours() -> None:
     """
-    if TEST_MODE:
-        print("Modo de teste ativo: ignorando horário e dia útil.")
-        return True
-
-    while True:
+    Mantém a aplicação aguardando até chegar
+    ao próximo período de funcionamento.
+    """
+    while not is_operating_hours():
         now = datetime.now()
 
-        if now.weekday() not in OPERATING_WEEKDAYS:
-            print("Hoje não é um dia de funcionamento.")
-            return False
+        print(
+            f"Fora do horário de funcionamento "
+            f"({now:%d/%m/%Y %H:%M}). Aguardando..."
+        )
 
-        if now.time() >= END_TIME:
-            print("O horário de funcionamento de hoje já terminou.")
-            return False
-
-        if START_TIME <= now.time() < END_TIME:
-            return True
-
-        print("Aguardando horário de funcionamento...")
-        time.sleep(30)
+        time.sleep(60)
