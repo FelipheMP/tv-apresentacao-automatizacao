@@ -10,6 +10,15 @@ OPERATING_WEEKDAYS = {0, 1, 2, 3, 4}
 # Permite ignorar horário e dia útil durante testes.
 TEST_MODE = False
 
+# Recuperação de erros
+
+# Tempo antes de tentar novamente após uma falha.
+ERROR_RETRY_DELAY = 10
+
+# Quantidade máxima de erros consecutivos antes
+# de encerrar a automação.
+MAX_CONSECUTIVE_ERRORS = 3
+
 # Tempo, em segundos, que cada slide ficará visível na TV
 SLIDE_DURATION = 15
 
