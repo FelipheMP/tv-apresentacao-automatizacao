@@ -3,6 +3,7 @@ import time
 import pyautogui
 
 from browser import BrowserController
+from datetime import datetime, timedelta
 from config import (
     MOUSE_PARK_POSITION,
     POWERBI_VIEW_MENU,
@@ -11,6 +12,8 @@ from config import (
     POWERBI_PAGE_PRIORIDADES,
     POWERBI_PAGE_A_VENCER,
     POWERBI_UI_DELAY,
+    POWERBI_REFRESH_INTERVAL,
+    POWERBI_REFRESH_WAIT
 )
 
 
@@ -21,6 +24,7 @@ class PowerBIController:
 
     def __init__(self):
         self.browser = BrowserController()
+        self.last_refresh = None
 
     def open(self) -> None:
         """Traz o Edge com o Power BI para frente."""
@@ -43,6 +47,35 @@ class PowerBIController:
         pyautogui.click()
 
         time.sleep(POWERBI_UI_DELAY)
+
+    def needs_refresh(self) -> bool:
+        """
+        Verifica se já passou o intervalo configurado
+        desde o último refresh do Power BI.
+        """
+        if self.last_refresh is None:
+            return True
+
+        elapsed = datetime.now() - self.last_refresh
+
+        return elapsed >= timedelta(seconds=POWERBI_REFRESH_INTERVAL)
+
+
+    def refresh(self) -> None:
+        """
+        Recarrega a página atual do Power BI usando Ctrl + R.
+        """
+        self.browser.focus()
+
+        print("Atualizando Power BI...")
+
+        pyautogui.hotkey("ctrl", "r")
+
+        time.sleep(POWERBI_REFRESH_WAIT)
+
+        self.last_refresh = datetime.now()
+
+        print("Power BI atualizado.")
 
     def enter_fullscreen(self) -> None:
         """

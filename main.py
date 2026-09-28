@@ -13,18 +13,18 @@ def main() -> None:
 
     time.sleep(3)
 
-    print("Power BI...")
+    print("Abrindo Power BI...")
     powerbi.open()
 
-    time.sleep(2)
+    if powerbi.needs_refresh():
+        powerbi.refresh()
 
     print("Entrando em tela cheia...")
     powerbi.enter_fullscreen()
 
-    time.sleep(3)
-
     print("Mostrando Prioridades...")
     powerbi.show_prioridades()
+
     time.sleep(5)
 
     print("Mostrando A vencer em 3 dias...")
@@ -34,8 +34,6 @@ def main() -> None:
 
     print("Saindo da tela cheia...")
     powerbi.exit_fullscreen()
-
-    time.sleep(2)
 
     print("Voltando ao PowerPoint...")
     powerpoint.focus()

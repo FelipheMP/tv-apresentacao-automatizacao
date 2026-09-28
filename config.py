@@ -32,3 +32,10 @@ POWERBI_PAGE_A_VENCER = (295, 1062)
 
 # Tempo entre interações com a interface
 POWERBI_UI_DELAY = 0.8
+
+# Intervalo entre recarregamentos do Power BI.
+# 75 minutos = 4500 segundos.
+POWERBI_REFRESH_INTERVAL = 75 * 60
+
+# Tempo de espera após Ctrl + R para o relatório carregar.
+POWERBI_REFRESH_WAIT = 5
