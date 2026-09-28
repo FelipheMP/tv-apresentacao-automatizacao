@@ -1,3 +1,15 @@
+from datetime import time
+
+# Horário de funcionamento da automação
+START_TIME = time(7, 0)
+END_TIME = time(17, 0)
+
+# Segunda a sexta
+OPERATING_WEEKDAYS = {0, 1, 2, 3, 4}
+
+# Permite ignorar horário e dia útil durante testes.
+TEST_MODE = False
+
 # Tempo, em segundos, que cada slide ficará visível na TV
 SLIDE_DURATION = 10
 
@@ -38,4 +50,4 @@ POWERBI_UI_DELAY = 0.8
 POWERBI_REFRESH_INTERVAL = 75 * 60
 
 # Tempo de espera após Ctrl + R para o relatório carregar.
-POWERBI_REFRESH_WAIT = 5
+POWERBI_REFRESH_WAIT = 10
