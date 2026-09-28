@@ -43,14 +43,37 @@ A quantidade de slides do PowerPoint é identificada automaticamente pela aplica
 
 ## Horário de funcionamento
 
-A aplicação possui suporte a:
+A aplicação foi projetada para permanecer em execução continuamente.
 
-- horário inicial configurável;
-- horário final configurável;
-- dias da semana permitidos;
-- modo de teste para ignorar temporariamente essas restrições.
+Por padrão, os ciclos automáticos são executados:
 
-Exemplo de configuração:
+```text
+Segunda a sexta-feira
+07:00 às 17:00
+```
+
+Fora desse período, a aplicação permanece ativa em modo de espera e não executa novos ciclos de apresentação.
+
+Exemplo de comportamento:
+
+```text
+17:00
+→ conclui o ciclo atual
+→ entra em espera
+
+Durante a noite
+→ permanece em execução
+→ verifica periodicamente o horário
+
+07:00 do próximo dia útil
+→ retoma automaticamente os ciclos
+```
+
+Esse comportamento é especialmente útil em computadores que permanecem ligados continuamente.
+
+As configurações de horário e dias permitidos podem ser alteradas em `config.py`.
+
+Exemplo:
 
 ```python
 START_TIME = time(7, 0)
@@ -59,7 +82,23 @@ END_TIME = time(17, 0)
 OPERATING_WEEKDAYS = {0, 1, 2, 3, 4}
 ```
 
-Os valores podem ser alterados em `config.py`.
+## Modo de teste
+
+Durante o desenvolvimento é possível ignorar temporariamente as restrições de horário e dias permitidos.
+
+Em `config.py`:
+
+```python
+TEST_MODE = True
+```
+
+Para uso normal:
+
+```python
+TEST_MODE = False
+```
+
+Quando o modo de teste está ativo, a automação pode executar ciclos independentemente do horário ou dia da semana.
 
 ## Atualização do Power BI
 
@@ -80,6 +119,8 @@ Exemplo:
 ```python
 POWERBI_REFRESH_INTERVAL = 75 * 60
 ```
+
+O refresh só é executado quando necessário, evitando recarregamentos excessivos da página.
 
 ## Tecnologias utilizadas
 
@@ -127,6 +168,7 @@ Responsável por:
 - iniciar os controladores;
 - executar os ciclos;
 - verificar o horário de funcionamento;
+- manter a aplicação em espera fora do horário;
 - controlar falhas consecutivas;
 - executar procedimentos básicos de recuperação.
 
@@ -186,7 +228,8 @@ Controla:
 - dias permitidos;
 - horário inicial;
 - horário final;
-- modo de teste.
+- modo de teste;
+- espera até o próximo período de funcionamento.
 
 ### `logger.py`
 
@@ -288,6 +331,8 @@ Esse arquivo:
 - ativa o ambiente virtual;
 - inicia a aplicação.
 
+Como o processo permanece ativo fora do horário de funcionamento, não é necessário reiniciar a aplicação diariamente.
+
 ## Execução em modo de depuração
 
 Para execução manual mantendo o terminal aberto após o encerramento:
@@ -300,27 +345,23 @@ Esse modo é útil para testes e diagnóstico de erros.
 
 ## Inicialização automática
 
-A aplicação pode ser iniciada junto com a sessão do usuário do Windows através da pasta de inicialização.
-
-Pressione:
-
-```text
-Win + R
-```
-
-Execute:
-
-```text
-shell:startup
-```
-
-Depois, crie um atalho para:
+A aplicação pode ser iniciada manualmente através de:
 
 ```text
 start_tv_dashboard.bat
 ```
 
-O controle de horário continua sendo realizado internamente pela própria aplicação.
+Como o processo permanece ativo fora do horário de funcionamento, uma única execução pode permanecer ativa continuamente enquanto o computador estiver ligado e a sessão do usuário permanecer aberta.
+
+Opcionalmente, em ambientes onde o computador pode reiniciar ou ocorrer logoff, pode ser configurada uma inicialização automática junto com a sessão do usuário do Windows.
+
+Uma possibilidade é utilizar a pasta de inicialização do usuário:
+
+```text
+shell:startup
+```
+
+Essa configuração é opcional e não faz parte da aplicação em si.
 
 ## Configuração das coordenadas
 
@@ -417,22 +458,6 @@ Antes de iniciar um ciclo, a aplicação pode verificar se:
 
 Caso algum desses componentes não esteja disponível, a execução do ciclo é interrompida e o mecanismo de recuperação é acionado.
 
-## Modo de teste
-
-Durante o desenvolvimento é possível ignorar temporariamente as restrições de horário e dias permitidos.
-
-Em `config.py`:
-
-```python
-TEST_MODE = True
-```
-
-Para uso normal:
-
-```python
-TEST_MODE = False
-```
-
 ## Git e desenvolvimento
 
 O projeto utiliza branches por funcionalidade.
@@ -446,6 +471,7 @@ feat/operating-hours
 feat/presentation-cycle
 feat/logging-and-recovery
 feat/watchdog
+feat/persistent-schedule
 ```
 
 Exemplo de fluxo:
@@ -516,7 +542,8 @@ A aplicação também depende de:
 - PowerPoint aberto;
 - apresentação em modo Slide Show;
 - Edge aberto;
-- resolução e escala da tela permanecendo estáveis.
+- resolução e escala da tela permanecendo estáveis;
+- sessão do usuário do Windows permanecendo ativa.
 
 ## Observações
 
@@ -525,3 +552,5 @@ O projeto foi desenvolvido para um computador dedicado à exibição contínua d
 Algumas decisões priorizam simplicidade e previsibilidade, como o uso de coordenadas fixas para controlar elementos da interface do Power BI.
 
 A automação não modifica o arquivo PowerPoint adicionando intervalos automáticos aos slides. A troca de slides é controlada pelo Python, permitindo que a mesma apresentação continue sendo utilizada normalmente em apresentações manuais.
+
+Fora do horário configurado, a aplicação permanece em espera em vez de encerrar, permitindo que o funcionamento seja retomado automaticamente no próximo período válido.
